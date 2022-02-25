@@ -5,6 +5,7 @@
   "dependencies": {
     "@loadable/component": "^5.15.0",
     "@reduxjs/toolkit": "^1.6.1",
+    "prop-types": "^15.8.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-intl": "^5.20.10",
@@ -47,17 +48,13 @@
     "@types/react-redux": "^7.1.18",
     "@types/react-router-dom": "^5.1.8",
     "@types/styled-components": "^5.1.14",
-    "@typescript-eslint/eslint-plugin": "^5.11.0",
-    "@typescript-eslint/parser": "^5.11.0",
     "eslint": "^7.11.0",
     "eslint-config-airbnb": "19.0.4",
-    "eslint-config-airbnb-typescript": "^16.1.0",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
-    "source-map-explorer": "^2.5.2",
-    "typescript": "^4.4.3"
+    "source-map-explorer": "^2.5.2"
   },
   "resolutions": {
     "styled-components": "^5"
