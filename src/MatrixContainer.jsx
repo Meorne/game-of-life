@@ -1,88 +1,66 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import styled from 'styled-components'
-import PropTypes from 'prop-types'
+import cloneDeep from 'lodash/cloneDeep'
+// import PropTypes from 'prop-types'
 import { lifeCycle } from './LifeLogical'
+import { matrixContext, paramsContext, templateContext } from './context'
+import { Line, Square } from './globalStyles'
 
 const Matrix = styled.div`
   width: ${({ matrixSizeW }) => matrixSizeW}px;
   height: ${({ matrixSizeH }) => matrixSizeH}px;
   `
-const Line = styled.div`
-  display: flex;
-`
-const Square = styled.div`
-  display: inline-flex;
-  width: ${({ squareSize }) => squareSize}px;
-  height: ${({ squareSize }) => squareSize}px;
-  border: ${({ borderSize }) => borderSize}px solid ${({ isSelected }) => (isSelected ? `#00ff37` : `#000`)};
-  background-color: ${({ isSelected }) => (isSelected ? `#000` : `unset`)};
-`
-const LaunchLifeBtn = styled.button``
+
+const Btn = styled.button``
 
 const propTypes = {
-  squareSize: PropTypes.number,
-  nbrSquareWidth: PropTypes.number,
-  nbrSquareHeight: PropTypes.number,
-  borderSize: PropTypes.number,
 }
 
 const defaultProps = {
-  squareSize: 30,
-  nbrSquareWidth: 10,
-  nbrSquareHeight: 10,
-  borderSize: 3,
 }
 
-const MatrixContainer = ({
-  squareSize, nbrSquareWidth, nbrSquareHeight, borderSize,
-}) => {
-  const [matrix, setMatrix] = useState([])
+const MatrixContainer = () => {
   const [lifeCycleState, setLifeCycleState] = useState(`stoped`)
+  const { currentMatrix, setMatrix } = useContext(matrixContext)
+  const { currentTemplate } = useContext(templateContext)
+  const { params: { squareSize, nbrSquare, borderSize } } = useContext(paramsContext)
 
   useEffect(() => {
-    if (matrix.length === 0) {
-      const newMatrix = []
-      let matrixX = 0
-      let matrixY = 0
+    setMatrix(cloneDeep(currentTemplate))
+  }, [currentTemplate])
 
-      while (matrixY < nbrSquareHeight) {
-        newMatrix[matrixY] = []
-        while (matrixX < nbrSquareWidth) {
-          newMatrix[matrixY][matrixX] = 0
-          matrixX++
-        }
-        matrixX = 0
-        matrixY++
-      }
-      setMatrix(newMatrix)
-    }
-    console.log(matrix)
+  useEffect(() => {
+    lifeCycle(currentMatrix, lifeCycleState, undefined, setMatrix)
   }, [
-    matrix,
+    currentMatrix,
+    lifeCycleState,
   ])
 
   const enableSquare = (x, y) => () => setMatrix(oldMatrix => {
-    oldMatrix[x][y] = oldMatrix[x][y] === 0 ? 1 : 0
+    if (lifeCycleState === `stoped`) {
+      oldMatrix[x][y] = oldMatrix[x][y] === 0 ? 1 : 0
+    }
     return [...oldMatrix]
   })
 
   const launchLifeCycle = () => {
-    const newLyfeCycleState = lifeCycleState === `stoped` ? `started` : `stoped`
-    setLifeCycleState(newLyfeCycleState)
-    return lifeCycle(matrix, newLyfeCycleState, setMatrix)
+    setLifeCycleState(lifeCycleState === `stoped` ? `started` : `stoped`)
   }
-  console.log(
-    matrix,
-    lifeCycleState,
-  )
+
+  const resetGame = () => {
+    console.log(currentTemplate)
+    setMatrix(currentTemplate)
+    setLifeCycleState(`stoped`)
+  }
+
   return (
     <>
       <Matrix
-        matrixSizeH={(squareSize + (borderSize * 2)) * nbrSquareHeight}
-        matrixSizeW={(squareSize + (borderSize * 2)) * nbrSquareWidth}
+        matrixSizeH={(squareSize + (borderSize * 2)) * nbrSquare}
+        matrixSizeW={(squareSize + (borderSize * 2)) * nbrSquare}
       >
         {
-          matrix.map((e, i) => (
+          currentMatrix.map((e, i) => (
             <Line>
               {
                 e.map((f, j) => (
@@ -98,11 +76,12 @@ const MatrixContainer = ({
           ))
         }
       </Matrix>
-      <LaunchLifeBtn
+      <Btn
         onClick={launchLifeCycle}
       >
-        Launch Life
-      </LaunchLifeBtn>
+        {`Launch Life : ${lifeCycleState}`}
+      </Btn>
+      <Btn onClick={resetGame}>  Reset </Btn>
     </>
   )
 }

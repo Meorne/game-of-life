@@ -1,5 +1,7 @@
-const updateNeighbor = (matrix, target) => {
-  const listOfPotentialNeighbor = [
+import cloneDeep from 'lodash/cloneDeep'
+
+const updateNeighbor = (prevMatrix, nextMatrix, target) => {
+  const listPotentialNeighbor = [
     {
       x: target.x - 1,
       y: target.y - 1,
@@ -12,9 +14,6 @@ const updateNeighbor = (matrix, target) => {
     },
     {
       x: target.x - 1,
-      y: target.y,
-    }, {
-      x: target.x,
       y: target.y,
     }, {
       x: target.x + 1,
@@ -32,45 +31,40 @@ const updateNeighbor = (matrix, target) => {
     },
   ]
 
-  const listOfNeighbor = listOfPotentialNeighbor
-    .map(e => (matrix[e.y][e.x] === undefined ? null : e))
+  const listOfNeighbor = listPotentialNeighbor
+    .map(e => (e?.y < 0 || e?.x < 0 || prevMatrix?.[e.y]?.[e.x] === undefined ? null : e))
     .filter(e => e)
 
+  let nbrNbhAlive = 0
   listOfNeighbor.forEach(e => {
-    matrix[e.y][e.x] = matrix[e.y][e.x] ? 0 : 1
+    if (prevMatrix[e.y][e.x] === 1) nbrNbhAlive += 1
   })
+
+  if (nbrNbhAlive === 3) {
+    nextMatrix[target.y][target.x] = 1
+  } if (nbrNbhAlive < 2 || nbrNbhAlive > 3) {
+    nextMatrix[target.y][target.x] = 0
+  }
 }
 
-export const updateLife = prevMatrix => {
-  const newMatrix = [...prevMatrix]
-  const listSelectedCells = []
-  newMatrix.forEach((e, i) => {
-    e.forEach((f, j) => {
-      if (f) {
-        listSelectedCells.push({
-          x: j,
-          y: i,
-        })
-      }
+export const updateLife = currentMatrix => {
+  const newMatrix = cloneDeep(currentMatrix)
+  currentMatrix.forEach((e, i) => e.forEach((f, j) => {
+    updateNeighbor(currentMatrix, newMatrix, {
+      x: j,
+      y: i,
     })
-  })
+  }))
 
-  listSelectedCells.forEach(e => {
-    updateNeighbor(newMatrix, e)
-  })
-
-  console.log(listSelectedCells)
   return newMatrix
 }
 
-let cycleTimer = null
-export const lifeCycle = (matrix, state, callBack) => {
-  console.log(`lifeCycle`, state)
+let timeout
+export const lifeCycle = (matrix, state, timer = 1000, callBack) => {
+  clearTimeout(timeout)
   if (state === `started`) {
-    cycleTimer = setInterval(() => {
-      callBack(updateLife(matrix))
-    }, 1000)
-  } else {
-    clearInterval(cycleTimer)
+    timeout = setTimeout(() => {
+      if (typeof callBack === `function`) callBack(updateLife(matrix))
+    }, timer)
   }
 }

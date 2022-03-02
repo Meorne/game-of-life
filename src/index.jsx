@@ -1,8 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import MatrixContainer from './MatrixContainer'
+import App from './App'
 
 ReactDOM.render(
-  <MatrixContainer />,
+  <App />,
   document.getElementById(`root`),
 )
