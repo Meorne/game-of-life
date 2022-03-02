@@ -16,8 +16,9 @@ const App = () => {
 
   const [params, setParams] = useState({
     squareSize: 30,
-    nbrSquare: 10,
+    nbrSquare: 30,
     borderSize: 3,
+    speed: 30,
   })
   const paramsMemo = useMemo(() => ({ params, setParams }), [params])
 

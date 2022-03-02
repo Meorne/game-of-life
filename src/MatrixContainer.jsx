@@ -6,10 +6,7 @@ import { lifeCycle } from './LifeLogical'
 import { matrixContext, paramsContext, templateContext } from './context'
 import { Line, Square } from './globalStyles'
 
-const Matrix = styled.div`
-  width: ${({ matrixSizeW }) => matrixSizeW}px;
-  height: ${({ matrixSizeH }) => matrixSizeH}px;
-  `
+const Matrix = styled.div``
 
 const Btn = styled.button``
 
@@ -22,15 +19,19 @@ const defaultProps = {
 const MatrixContainer = () => {
   const [lifeCycleState, setLifeCycleState] = useState(`stoped`)
   const { currentMatrix, setMatrix } = useContext(matrixContext)
-  const { currentTemplate } = useContext(templateContext)
-  const { params: { squareSize, nbrSquare, borderSize } } = useContext(paramsContext)
+  const { currentTemplate, setTemplate } = useContext(templateContext)
+  const {
+    params: {
+      squareSize, borderSize, speed,
+    },
+  } = useContext(paramsContext)
 
   useEffect(() => {
     setMatrix(cloneDeep(currentTemplate))
   }, [currentTemplate])
 
   useEffect(() => {
-    lifeCycle(currentMatrix, lifeCycleState, undefined, setMatrix)
+    lifeCycle(currentMatrix, lifeCycleState, (2000 / speed), setMatrix)
   }, [
     currentMatrix,
     lifeCycleState,
@@ -48,40 +49,30 @@ const MatrixContainer = () => {
   }
 
   const resetGame = () => {
-    console.log(currentTemplate)
-    setMatrix(currentTemplate)
+    setTemplate([])
     setLifeCycleState(`stoped`)
   }
 
   return (
     <>
-      <Matrix
-        matrixSizeH={(squareSize + (borderSize * 2)) * nbrSquare}
-        matrixSizeW={(squareSize + (borderSize * 2)) * nbrSquare}
-      >
-        {
-          currentMatrix.map((e, i) => (
-            <Line>
-              {
-                e.map((f, j) => (
-                  <Square
-                    borderSize={borderSize}
-                    squareSize={squareSize}
-                    isSelected={f === 1}
-                    onClick={enableSquare(i, j)}
-                  />
-                ))
-              }
-            </Line>
-          ))
-        }
+      <Matrix>
+        {currentMatrix.map((e, i) => (
+          <Line>
+            {e.map((f, j) => (
+              <Square
+                borderSize={borderSize}
+                squareSize={squareSize}
+                isSelected={f === 1}
+                onClick={enableSquare(i, j)}
+              />
+            ))}
+          </Line>
+        ))}
       </Matrix>
-      <Btn
-        onClick={launchLifeCycle}
-      >
+      <Btn onClick={launchLifeCycle}>
         {`Launch Life : ${lifeCycleState}`}
       </Btn>
-      <Btn onClick={resetGame}>  Reset </Btn>
+      <Btn onClick={resetGame}> Reset </Btn>
     </>
   )
 }
