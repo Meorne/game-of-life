@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useEffect, useContext } from 'react'
 import styled from 'styled-components'
 import cloneDeep from 'lodash/cloneDeep'
 // import PropTypes from 'prop-types'
 import { lifeCycle } from './LifeLogical'
-import { matrixContext, paramsContext, templateContext } from './context'
+import {
+  matrixContext, paramsContext, templateContext, lifeCycleContext,
+} from './context'
 import { Line, Square } from './globalStyles'
 
 const Matrix = styled.div``
@@ -17,14 +19,10 @@ const defaultProps = {
 }
 
 const MatrixContainer = () => {
-  const [lifeCycleState, setLifeCycleState] = useState(`stoped`)
+  const { lifeCycleState, setLifeCycleState } = useContext(lifeCycleContext)
   const { currentMatrix, setMatrix } = useContext(matrixContext)
   const { currentTemplate, setTemplate } = useContext(templateContext)
-  const {
-    params: {
-      squareSize, borderSize, speed,
-    },
-  } = useContext(paramsContext)
+  const { params: { squareSize, borderSize, speed } } = useContext(paramsContext)
 
   useEffect(() => {
     setMatrix(cloneDeep(currentTemplate))
@@ -32,6 +30,7 @@ const MatrixContainer = () => {
 
   useEffect(() => {
     lifeCycle(currentMatrix, lifeCycleState, (2000 / speed), setMatrix)
+    window.currentMatrix = currentMatrix
   }, [
     currentMatrix,
     lifeCycleState,
@@ -60,9 +59,9 @@ const MatrixContainer = () => {
           <Line>
             {e.map((f, j) => (
               <Square
+                className={f === 1 ? `isSelected` : ``}
                 borderSize={borderSize}
                 squareSize={squareSize}
-                isSelected={f === 1}
                 onClick={enableSquare(i, j)}
               />
             ))}

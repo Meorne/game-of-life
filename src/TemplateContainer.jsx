@@ -1,44 +1,46 @@
 import React, { useContext, useEffect } from 'react'
 import cloneDeep from 'lodash/cloneDeep'
-import { templateContext, paramsContext, matrixContext } from './context'
-import { Line, Square } from './globalStyles'
+import styled from 'styled-components'
 
-const gliderTmpl = [
-  [0, 0, 0, 0, 0],
-  [0, 0, 0, 1, 0],
-  [0, 1, 0, 1, 0],
-  [0, 0, 1, 1, 0],
-  [0, 0, 0, 0, 0],
-]
+import { templateContext, paramsContext } from './context'
+import { Line, Square } from './globalStyles'
+import { gliderTmpl, gliderGunTmpl } from './templateList'
+
+const TemplateWrapper = styled.div`
+  display: flex;
+`
+const Template = styled.div`
+  margin: 10px;
+`
+
 const TemplateContainer = () => {
   const { currentTemplate, setTemplate } = useContext(templateContext)
-  const { currentMatrix } = useContext(matrixContext)
+  // const { currentMatrix } = useContext(matrixContext)
   const { params: { nbrSquare } } = useContext(paramsContext)
 
-  useEffect(() => {
-    if (currentTemplate.length === 0) {
-      const newMatrix = []
-      let matrixX = 0
-      let matrixY = 0
+  const defaultMatrix = () => {
+    const newMatrix = []
+    let matrixX = 0
+    let matrixY = 0
 
-      while (matrixY < nbrSquare) {
-        newMatrix[matrixY] = []
-        while (matrixX < nbrSquare) {
-          newMatrix[matrixY][matrixX] = 0
-          matrixX++
-        }
-        matrixX = 0
-        matrixY++
+    while (matrixY < nbrSquare) {
+      newMatrix[matrixY] = []
+      while (matrixX < nbrSquare) {
+        newMatrix[matrixY][matrixX] = 0
+        matrixX++
       }
-      setTemplate(newMatrix)
+      matrixX = 0
+      matrixY++
     }
-  }, [currentTemplate])
+
+    return newMatrix
+  }
 
   const drawTmplInCurrentMatrix = tmpl => () => {
-    const newMatrix = cloneDeep(currentMatrix)
+    const newMatrix = cloneDeep(defaultMatrix())
 
-    const yCmL = currentMatrix.length
-    const xCmL = currentMatrix[0].length
+    const yCmL = newMatrix.length
+    const xCmL = newMatrix[0].length
 
     const yTmplL = tmpl.length
     const xTmplL = tmpl[0].length
@@ -62,28 +64,31 @@ const TemplateContainer = () => {
     return setTemplate(tmpl)
   }
 
+  useEffect(() => {
+    if (currentTemplate.length === 0) setTemplate(defaultMatrix())
+  }, [currentTemplate])
+
   const drawTemplate = tmpl => (
-    <div onClick={drawTmplInCurrentMatrix(tmpl)}>
+    <Template onClick={drawTmplInCurrentMatrix(tmpl)}>
       {tmpl.map(e => (
         <Line>
-          {
-            e.map(f => (
-              <Square
-                borderSize={1}
-                squareSize={5}
-                isSelected={f === 1}
-              />
-            ))
-          }
+          {e.map(f => (
+            <Square
+              className={f === 1 ? `isSelected` : ``}
+              borderSize={1}
+              squareSize={5}
+            />
+          ))}
         </Line>
       ))}
-    </div>
+    </Template>
   )
 
   return (
-    <div>
+    <TemplateWrapper>
       {drawTemplate(gliderTmpl)}
-    </div>
+      {drawTemplate(gliderGunTmpl)}
+    </TemplateWrapper>
   )
 }
 

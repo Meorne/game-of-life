@@ -4,3 +4,4 @@ export const theme = {}
 export const matrixContext = createContext()
 export const templateContext = createContext()
 export const paramsContext = createContext()
+export const lifeCycleContext = createContext()

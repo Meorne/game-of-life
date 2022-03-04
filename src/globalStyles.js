@@ -8,7 +8,6 @@ html, body, #root {
   margin: 0;
   padding: 0;
   background: #efeff0;
-  overflow: hidden;
 }
 `
 const Line = styled.div`
@@ -19,8 +18,13 @@ const Square = styled.div`
   display: inline-flex;
   width: ${({ squareSize }) => squareSize}px;
   height: ${({ squareSize }) => squareSize}px;
-  border: ${({ borderSize }) => borderSize}px solid ${({ isSelected }) => (isSelected ? `#00ff37` : `#000`)};
-  background-color: ${({ isSelected }) => (isSelected ? `#000` : `unset`)};
+  border: ${({ borderSize }) => borderSize}px solid #000;
+  background-color: unset;
+
+  &.isSelected {
+    border-color: #47ff7e;
+    background-color: #000;
+  }
 `
 
 export {
