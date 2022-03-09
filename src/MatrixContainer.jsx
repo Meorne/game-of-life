@@ -2,13 +2,25 @@ import React, { useEffect, useContext } from 'react'
 import styled from 'styled-components'
 import cloneDeep from 'lodash/cloneDeep'
 // import PropTypes from 'prop-types'
+import { BsStopBtn, BsPlayBtn } from "react-icons/bs"
 import { lifeCycle } from './LifeLogical'
+import loader from './img/1495.gif'
+
 import {
   matrixContext, paramsContext, templateContext, lifeCycleContext,
 } from './context'
 import { Line, Square, Btn } from './globalStyles'
 
-const Matrix = styled.div``
+const Matrix = styled.div`
+
+`
+const ActionsContainer = styled.div`
+  position:absolute;
+  bottom:0 ;
+  left:0 ;
+  padding:25px ;
+  background:#fff ;
+`
 
 const propTypes = {
 }
@@ -53,23 +65,29 @@ const MatrixContainer = () => {
   return (
     <>
       <Matrix>
-        {currentMatrix.map((e, i) => (
-          <Line>
-            {e.map((f, j) => (
-              <Square
-                className={f === 1 ? `isSelected` : ``}
-                borderSize={borderSize}
-                squareSize={squareSize}
-                onClick={enableSquare(i, j)}
-              />
-            ))}
-          </Line>
-        ))}
+        {lifeCycleState === `pending`
+          ? <img src={loader} alt="" />
+          : currentMatrix.map((e, i) => (
+            <Line>
+              {e.map((f, j) => (
+                <Square
+                  className={f === 1 ? `isSelected` : ``}
+                  borderSize={borderSize}
+                  squareSize={squareSize}
+                  onClick={enableSquare(i, j)}
+                />
+              ))}
+            </Line>
+          ))}
       </Matrix>
-      <Btn onClick={launchLifeCycle}>
-        {`Launch Life : ${lifeCycleState}`}
-      </Btn>
-      <Btn onClick={resetGame}> Reset </Btn>
+      <ActionsContainer>
+        <Btn onClick={launchLifeCycle}>
+          {lifeCycleState === `stoped`
+            ? <BsPlayBtn />
+            : <BsStopBtn />}
+        </Btn>
+        <Btn onClick={resetGame}> Reset </Btn>
+      </ActionsContainer>
     </>
   )
 }

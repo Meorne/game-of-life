@@ -2,9 +2,9 @@ import React, { useContext, useEffect } from 'react'
 import cloneDeep from 'lodash/cloneDeep'
 import styled from 'styled-components'
 
-import { templateContext, paramsContext, lifeCycleContext } from './context'
-import { Line, Square } from './globalStyles'
-import * as tmplList from './templateList'
+import { templateContext, paramsContext, lifeCycleContext } from '../context'
+import { Line, Square } from '../globalStyles'
+import * as tmplList from '../templateList'
 
 const TemplateWrapper = styled.div`
   display: flex;
@@ -17,22 +17,29 @@ const TemplateContainer = () => {
   const { currentTemplate, setTemplate } = useContext(templateContext)
   const { setLifeCycleState } = useContext(lifeCycleContext)
   // const { currentMatrix } = useContext(matrixContext)
-  const { params: { nbrSquare } } = useContext(paramsContext)
+  const { params: { borderSize, squareSize } } = useContext(paramsContext)
 
   const defaultMatrix = () => {
+    setLifeCycleState(`pending`)
+
+    const calculSquareBase = squareSize + (borderSize * 2)
+    const nbrSquareH = Math.floor(window.innerHeight / calculSquareBase)
+    const nbrSquareW = Math.floor(window.innerWidth / calculSquareBase)
+
     const newMatrix = []
     let matrixX = 0
     let matrixY = 0
 
-    while (matrixY < nbrSquare) {
+    while (matrixY < nbrSquareH) {
       newMatrix[matrixY] = []
-      while (matrixX < nbrSquare) {
+      while (matrixX < nbrSquareW) {
         newMatrix[matrixY][matrixX] = 0
         matrixX++
       }
       matrixX = 0
       matrixY++
     }
+    setLifeCycleState(`stoped`)
 
     return newMatrix
   }
