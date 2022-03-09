@@ -10,11 +10,11 @@ html, body, #root {
   background: #efeff0;
 }
 `
-const Line = styled.div`
+export const Line = styled.div`
   display: flex;
 `
 
-const Square = styled.div`
+export const Square = styled.div`
   display: inline-flex;
   width: ${({ squareSize }) => squareSize}px;
   height: ${({ squareSize }) => squareSize}px;
@@ -27,8 +27,6 @@ const Square = styled.div`
   }
 `
 
-export {
-  Line,
-  Square,
-}
+export const Btn = styled.button``
+
 export default GlobalStyles

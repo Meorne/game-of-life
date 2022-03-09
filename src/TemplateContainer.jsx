@@ -2,9 +2,9 @@ import React, { useContext, useEffect } from 'react'
 import cloneDeep from 'lodash/cloneDeep'
 import styled from 'styled-components'
 
-import { templateContext, paramsContext } from './context'
+import { templateContext, paramsContext, lifeCycleContext } from './context'
 import { Line, Square } from './globalStyles'
-import { gliderTmpl, gliderGunTmpl } from './templateList'
+import * as tmplList from './templateList'
 
 const TemplateWrapper = styled.div`
   display: flex;
@@ -15,6 +15,7 @@ const Template = styled.div`
 
 const TemplateContainer = () => {
   const { currentTemplate, setTemplate } = useContext(templateContext)
+  const { setLifeCycleState } = useContext(lifeCycleContext)
   // const { currentMatrix } = useContext(matrixContext)
   const { params: { nbrSquare } } = useContext(paramsContext)
 
@@ -37,6 +38,7 @@ const TemplateContainer = () => {
   }
 
   const drawTmplInCurrentMatrix = tmpl => () => {
+    setLifeCycleState(`stoped`)
     const newMatrix = cloneDeep(defaultMatrix())
 
     const yCmL = newMatrix.length
@@ -68,26 +70,28 @@ const TemplateContainer = () => {
     if (currentTemplate.length === 0) setTemplate(defaultMatrix())
   }, [currentTemplate])
 
-  const drawTemplate = tmpl => (
-    <Template onClick={drawTmplInCurrentMatrix(tmpl)}>
-      {tmpl.map(e => (
-        <Line>
-          {e.map(f => (
-            <Square
-              className={f === 1 ? `isSelected` : ``}
-              borderSize={1}
-              squareSize={5}
-            />
-          ))}
-        </Line>
-      ))}
-    </Template>
+  const drawTemplate = ({ title, tmpl = [] }) => (
+    <>
+      <div>{title}</div>
+      <Template onClick={drawTmplInCurrentMatrix(tmpl)}>
+        {tmpl.map(e => (
+          <Line>
+            {e.map(f => (
+              <Square
+                className={f === 1 ? `isSelected` : ``}
+                borderSize={1}
+                squareSize={5}
+              />
+            ))}
+          </Line>
+        ))}
+      </Template>
+    </>
   )
 
   return (
     <TemplateWrapper>
-      {drawTemplate(gliderTmpl)}
-      {drawTemplate(gliderGunTmpl)}
+      {Object.entries(tmplList).map(value => drawTemplate(value[1]))}
     </TemplateWrapper>
   )
 }

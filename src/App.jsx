@@ -21,7 +21,7 @@ const App = () => {
     squareSize: 30,
     nbrSquare: 20,
     borderSize: 3,
-    speed: 50,
+    speed: 20,
   })
   const paramsMemo = useMemo(() => ({ params, setParams }), [params])
 

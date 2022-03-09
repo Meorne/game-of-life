@@ -6,11 +6,9 @@ import { lifeCycle } from './LifeLogical'
 import {
   matrixContext, paramsContext, templateContext, lifeCycleContext,
 } from './context'
-import { Line, Square } from './globalStyles'
+import { Line, Square, Btn } from './globalStyles'
 
 const Matrix = styled.div``
-
-const Btn = styled.button``
 
 const propTypes = {
 }
