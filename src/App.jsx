@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react'
 import MatrixContainer from './MatrixContainer'
-import OptionContainer from './OptionContainer'
+import ParamsContainer from './ParamsContainer'
+import TemplateContainer from './TemplateContainer'
 import GlobalStyles from './globalStyles'
 import {
   matrixContext, templateContext, paramsContext, theme, lifeCycleContext,
@@ -17,11 +18,9 @@ const App = () => {
   const lifeCycleMemo = useMemo(() => ({ lifeCycleState, setLifeCycleState }), [lifeCycleState])
   const defaulfParams = {
     squareSize: 30,
-    borderSize: 1,
-    speed: 20,
+    speed: 50,
   }
 
-  console.log(defaulfParams)
   const [params, setParams] = useState(defaulfParams)
   const paramsMemo = useMemo(() => ({ params, setParams }), [params])
 
@@ -31,7 +30,8 @@ const App = () => {
         <templateContext.Provider value={templateMemo}>
           <matrixContext.Provider value={matrixMemo}>
             <GlobalStyles theme={theme} />
-            <OptionContainer />
+            <ParamsContainer />
+            <TemplateContainer />
             <MatrixContainer />
           </matrixContext.Provider>
         </templateContext.Provider>

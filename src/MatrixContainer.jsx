@@ -12,14 +12,20 @@ import {
 import { Line, Square, Btn } from './globalStyles'
 
 const Matrix = styled.div`
-
+  display:flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
 `
 const ActionsContainer = styled.div`
   position:absolute;
   bottom:0 ;
   left:0 ;
-  padding:25px ;
-  background:#fff ;
+  padding:25px;
+  background:#fff;
+  display:flex;
 `
 
 const propTypes = {
@@ -32,7 +38,7 @@ const MatrixContainer = () => {
   const { lifeCycleState, setLifeCycleState } = useContext(lifeCycleContext)
   const { currentMatrix, setMatrix } = useContext(matrixContext)
   const { currentTemplate, setTemplate } = useContext(templateContext)
-  const { params: { squareSize, borderSize, speed } } = useContext(paramsContext)
+  const { params: { squareSize, speed } } = useContext(paramsContext)
 
   useEffect(() => {
     setMatrix(cloneDeep(currentTemplate))
@@ -68,11 +74,12 @@ const MatrixContainer = () => {
         {lifeCycleState === `pending`
           ? <img src={loader} alt="" />
           : currentMatrix.map((e, i) => (
-            <Line>
+            <Line key={`line-${i}`}>
               {e.map((f, j) => (
                 <Square
+                  key={`square-${j}`}
                   className={f === 1 ? `isSelected` : ``}
-                  borderSize={borderSize}
+                  borderSize={1}
                   squareSize={squareSize}
                   onClick={enableSquare(i, j)}
                 />
@@ -81,7 +88,10 @@ const MatrixContainer = () => {
           ))}
       </Matrix>
       <ActionsContainer>
-        <Btn onClick={launchLifeCycle}>
+        <Btn
+          onClick={launchLifeCycle}
+          className="icon"
+        >
           {lifeCycleState === `stoped`
             ? <BsPlayBtn />
             : <BsStopBtn />}

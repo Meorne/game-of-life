@@ -8,6 +8,8 @@ html, body, #root {
   margin: 0;
   padding: 0;
   background: #efeff0;
+  overflow: hidden ;
+  font-family: Arial, Helvetica, sans-serif;
 }
 `
 export const Line = styled.div`
@@ -27,6 +29,28 @@ export const Square = styled.div`
   }
 `
 
-export const Btn = styled.button``
+export const Btn = styled.div`
+  display: inline-block;
+  padding: 5px;
+  border: 1px solid #333;
+  border-radius: 5px ;
+  margin: 0 5px ;
+  transition: background .5s;
+
+  & > *{
+    display:inline;
+    vertical-align: bottom;
+  }
+
+  &:hover{
+    cursor: pointer;
+    background: #ccc;
+  }
+
+  &.icon{
+    padding: 0 5px;
+    font-size: 20px;
+  }
+`
 
 export default GlobalStyles

@@ -1,30 +1,40 @@
 import React, { useContext, useEffect } from 'react'
 import cloneDeep from 'lodash/cloneDeep'
+import throttle from 'lodash/throttle'
 import styled from 'styled-components'
 
-import { templateContext, paramsContext, lifeCycleContext } from '../context'
-import { Line, Square } from '../globalStyles'
-import * as tmplList from '../templateList'
+import { templateContext, paramsContext, lifeCycleContext } from './context'
+import { Line, Square } from './globalStyles'
+import * as tmplList from './templateList'
 
 const TemplateWrapper = styled.div`
   display: flex;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #fff;
+  padding: 5px;
 `
 const Template = styled.div`
   margin: 10px;
+  cursor: pointer;
+`
+const Title = styled.div`
+  text-align:center ;
 `
 
 const TemplateContainer = () => {
   const { currentTemplate, setTemplate } = useContext(templateContext)
   const { setLifeCycleState } = useContext(lifeCycleContext)
   // const { currentMatrix } = useContext(matrixContext)
-  const { params: { borderSize, squareSize } } = useContext(paramsContext)
+  const { params: { squareSize } } = useContext(paramsContext)
 
   const defaultMatrix = () => {
     setLifeCycleState(`pending`)
 
-    const calculSquareBase = squareSize + (borderSize * 2)
-    const nbrSquareH = Math.floor(window.innerHeight / calculSquareBase)
-    const nbrSquareW = Math.floor(window.innerWidth / calculSquareBase)
+    const calculSquareBase = squareSize + 2
+    const nbrSquareH = Math.ceil(window.innerHeight / calculSquareBase)
+    const nbrSquareW = Math.ceil(window.innerWidth / calculSquareBase)
 
     const newMatrix = []
     let matrixX = 0
@@ -77,14 +87,21 @@ const TemplateContainer = () => {
     if (currentTemplate.length === 0) setTemplate(defaultMatrix())
   }, [currentTemplate])
 
+  useEffect(() => {
+    const throttledTmpl = throttle(() => setTemplate(defaultMatrix()), 200)
+    window.addEventListener(`resize`, throttledTmpl)
+    return () => window.removeEventListener(`resize`, throttledTmpl)
+  }, [])
+
   const drawTemplate = ({ title, tmpl = [] }) => (
-    <>
-      <div>{title}</div>
+    <div key={title}>
+      <Title>{title}</Title>
       <Template onClick={drawTmplInCurrentMatrix(tmpl)}>
-        {tmpl.map(e => (
-          <Line>
-            {e.map(f => (
+        {tmpl.map((e, i) => (
+          <Line key={`line-${i}`}>
+            {e.map((f, j) => (
               <Square
+                key={`square-${j}`}
                 className={f === 1 ? `isSelected` : ``}
                 borderSize={1}
                 squareSize={5}
@@ -93,7 +110,7 @@ const TemplateContainer = () => {
           </Line>
         ))}
       </Template>
-    </>
+    </div>
   )
 
   return (
