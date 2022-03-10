@@ -5,7 +5,6 @@ module.exports = {
     `airbnb/hooks`,
   ],
   parserOptions: {
-    project: `./tsconfig.json`,
     ecmaVersion: 2021,
     ecmaFeatures: {
       jsx: true,

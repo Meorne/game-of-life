@@ -1,7 +1,6 @@
 import cloneDeep from 'lodash/cloneDeep'
 
 const updateNeighbor = (prevMatrix, target) => {
-  const currentTarget = prevMatrix[target.y][target.x]
   const listPotentialNeighbor = [
     {
       x: target.x - 1,
@@ -32,21 +31,16 @@ const updateNeighbor = (prevMatrix, target) => {
     },
   ]
 
-  const listOfNeighbor = listPotentialNeighbor
-    .map(e => (e?.y < 0 || e?.x < 0 || prevMatrix?.[e.y]?.[e.x] === undefined ? null : e))
-    .filter(e => e)
-
-  let nbrNbhAlive = 0
-  listOfNeighbor.forEach(e => {
-    if (prevMatrix[e.y][e.x] === 1) nbrNbhAlive += 1
-  })
+  const nbrNbhAlive = listPotentialNeighbor
+    .map(e => ((e?.y > 0 && e?.x > 0 && prevMatrix?.[e.y]?.[e.x] === 1) ? 1 : null))
+    .filter(e => e).length
 
   if (nbrNbhAlive === 3) {
     return 1
   } if (nbrNbhAlive < 2 || nbrNbhAlive > 3) {
     return 0
   }
-  return currentTarget
+  return prevMatrix[target.y][target.x]
 }
 
 export const updateLife = currentMatrix => cloneDeep(currentMatrix)
@@ -56,7 +50,7 @@ export const updateLife = currentMatrix => cloneDeep(currentMatrix)
   })))
 
 let timeout
-export const lifeCycle = (matrix, state, timer = 1000, callBack) => {
+export const lifeCycle = (matrix, state, timer = 2000, callBack) => {
   clearTimeout(timeout)
   if (state === `started`) {
     timeout = setTimeout(() => {

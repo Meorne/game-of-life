@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 import { templateContext, paramsContext, lifeCycleContext } from './context'
 import { Line, Square } from './globalStyles'
-import * as tmplList from './templateList'
+import tmplList from './templateList.json'
 
 const TemplateWrapper = styled.div`
   display: flex;
@@ -115,7 +115,7 @@ const TemplateContainer = () => {
 
   return (
     <TemplateWrapper>
-      {Object.entries(tmplList).map(value => drawTemplate(value[1]))}
+      {tmplList.map(e => drawTemplate(e))}
     </TemplateWrapper>
   )
 }

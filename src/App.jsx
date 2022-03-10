@@ -18,7 +18,7 @@ const App = () => {
   const lifeCycleMemo = useMemo(() => ({ lifeCycleState, setLifeCycleState }), [lifeCycleState])
   const defaulfParams = {
     squareSize: 30,
-    speed: 50,
+    speed: 5,
   }
 
   const [params, setParams] = useState(defaulfParams)

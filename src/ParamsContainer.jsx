@@ -47,7 +47,7 @@ const ParamsContainer = () => {
           type="range"
           onChange={updateParams(`speed`, `number`)}
           value={newParams?.speed}
-          min="20"
+          min="1"
           max="100"
         />
         <ParamsInput disabled value={newParams?.speed} />
