@@ -18,6 +18,7 @@ const App = () => {
   const lifeCycleMemo = useMemo(() => ({ lifeCycleState, setLifeCycleState }), [lifeCycleState])
   const defaulfParams = {
     squareSize: 30,
+    borderSize: 1,
     speed: 5,
   }
 

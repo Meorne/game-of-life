@@ -43,18 +43,55 @@ const updateNeighbor = (prevMatrix, target) => {
   return prevMatrix[target.y][target.x]
 }
 
-export const updateLife = currentMatrix => cloneDeep(currentMatrix)
-  .map((e, i) => e.map((f, j) => updateNeighbor(currentMatrix, {
-    x: j,
-    y: i,
-  })))
+const perimeterToRender = matrix => {
+  let startX = null
+  let startY = null
+  let endX = null
+  let endY = null
+
+  matrix.forEach((e, j) => e.forEach((f, i) => {
+    if (f === 1) {
+      if (!startX || startX > i)startX = i
+      if (!startY || startY > j)startY = j
+      if (!endX || endX < i)endX = i
+      if (!endY || endY < j)endY = j
+    }
+  }))
+
+  return {
+    startX,
+    startY,
+    endX,
+    endY,
+  }
+}
+
+export const updateLife = currentMatrix => {
+  const newMatrix = cloneDeep(currentMatrix)
+  const {
+    startX, startY,
+    endX, endY,
+  } = perimeterToRender(currentMatrix)
+
+  return newMatrix.map((e, j) => e.map((f, i) => {
+    if (i >= startX - 1 && i <= endX + 1
+      && j >= startY - 1 && j <= endY + 1) {
+      return updateNeighbor(currentMatrix, {
+        x: i,
+        y: j,
+      })
+    }
+    return 0
+  }))
+}
 
 let timeout
 export const lifeCycle = (matrix, state, timer = 2000, callBack) => {
-  clearTimeout(timeout)
   if (state === `started`) {
     timeout = setTimeout(() => {
       if (typeof callBack === `function`) callBack(updateLife(matrix))
     }, timer)
+  } else {
+    clearTimeout(timeout)
   }
 }

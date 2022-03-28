@@ -38,7 +38,7 @@ const MatrixContainer = () => {
   const { lifeCycleState, setLifeCycleState } = useContext(lifeCycleContext)
   const { currentMatrix, setMatrix } = useContext(matrixContext)
   const { currentTemplate, setTemplate } = useContext(templateContext)
-  const { params: { squareSize, speed } } = useContext(paramsContext)
+  const { params: { squareSize, speed, borderSize } } = useContext(paramsContext)
 
   useEffect(() => {
     setMatrix(cloneDeep(currentTemplate))
@@ -75,15 +75,23 @@ const MatrixContainer = () => {
           ? <img src={loader} alt="" />
           : currentMatrix.map((e, i) => (
             <Line key={`line-${i}`}>
-              {e.map((f, j) => (
-                <Square
-                  key={`square-${j}`}
-                  className={f === 1 ? `isSelected` : ``}
-                  borderSize={1}
-                  squareSize={squareSize}
-                  onClick={enableSquare(i, j)}
-                />
-              ))}
+              {e.map((f, j) => {
+                let className = ``
+                if (f === 1) {
+                  className = `isSelected`
+                } else if (f === `unscoped`) {
+                  className = `isUnscoped`
+                }
+                return (
+                  <Square
+                    key={`square-${j}`}
+                    className={className}
+                    squareSize={squareSize}
+                    borderSize={borderSize}
+                    onClick={enableSquare(i, j)}
+                  />
+                )
+              })}
             </Line>
           ))}
       </Matrix>

@@ -27,12 +27,17 @@ export const Square = styled.div`
     border-color: #47ff7e;
     background-color: #000;
   }
+
+  &.isUnscoped {
+    border-color: #ff5347;
+    background-color: #000;
+  }
 `
 
 export const Btn = styled.div`
   display: inline-block;
   padding: 5px;
-  border: 1px solid #333;
+  border: 1px solid #999;
   border-radius: 5px ;
   margin: 0 5px ;
   transition: background .5s;
