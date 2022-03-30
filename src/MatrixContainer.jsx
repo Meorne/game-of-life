@@ -45,7 +45,7 @@ const MatrixContainer = () => {
   }, [currentTemplate])
 
   useEffect(() => {
-    lifeCycle(currentMatrix, lifeCycleState, (2000 / speed), setMatrix)
+    lifeCycle(currentMatrix, lifeCycleState, 1000 / speed, setMatrix)
     window.currentMatrix = currentMatrix
   }, [
     currentMatrix,

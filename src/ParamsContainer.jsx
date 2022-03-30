@@ -16,6 +16,7 @@ const ParamsContainer = () => {
   const { params, setParams } = useContext(paramsContext)
   const { setTemplate } = useContext(templateContext)
   const [newParams, setNewParams] = useState({ ...params })
+  const { speed } = newParams
 
   const updateParams = (key, type = `string`) => ({ target: { value } }) => {
     const modifiedParams = { ...newParams }
@@ -46,11 +47,11 @@ const ParamsContainer = () => {
         <ParamsInput
           type="range"
           onChange={updateParams(`speed`, `number`)}
-          value={newParams?.speed}
+          value={speed}
           min="1"
           max="100"
         />
-        <ParamsInput disabled value={newParams?.speed} />
+        <ParamsInput disabled value={`${speed}%`} />
       </div>
       <Btn onClick={applyParams}>Save</Btn>
     </ParamsWrapper>
