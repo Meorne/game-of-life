@@ -7,7 +7,7 @@ import { templateContext, paramsContext, lifeCycleContext } from './context'
 import { Line, Square } from './globalStyles'
 import tmplList from './templateList.json'
 
-const TemplateWrapper = styled.div`
+const TemplateWrapper = styled.div.attrs({ className: `TemplateWrapper` })`
   display: flex;
   position: absolute;
   top: 0;
@@ -15,11 +15,20 @@ const TemplateWrapper = styled.div`
   background: #fff;
   padding: 5px;
 `
-const Template = styled.div`
+const Template = styled.div.attrs({ className: `Template` })`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin: 10px;
   cursor: pointer;
 `
-const Title = styled.div`
+const DrawedTmpl = styled.div.attrs({ className: `DrawedTmpl` })`
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+  cursor: pointer;
+`
+const Title = styled.div.attrs({ className: `Title` })`
   text-align:center ;
 `
 
@@ -94,9 +103,9 @@ const TemplateContainer = () => {
   }, [])
 
   const drawTemplate = ({ title, tmpl = [] }) => (
-    <div key={title}>
+    <Template key={title}>
       <Title>{title}</Title>
-      <Template onClick={drawTmplInCurrentMatrix(tmpl)}>
+      <DrawedTmpl onClick={drawTmplInCurrentMatrix(tmpl)}>
         {tmpl.map((e, i) => (
           <Line key={`line-${i}`}>
             {e.map((f, j) => (
@@ -109,8 +118,8 @@ const TemplateContainer = () => {
             ))}
           </Line>
         ))}
-      </Template>
-    </div>
+      </DrawedTmpl>
+    </Template>
   )
 
   return (

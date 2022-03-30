@@ -34,6 +34,7 @@ const propTypes = {
 const defaultProps = {
 }
 
+let i = 0
 const MatrixContainer = () => {
   const { lifeCycleState, setLifeCycleState } = useContext(lifeCycleContext)
   const { currentMatrix, setMatrix } = useContext(matrixContext)
@@ -46,6 +47,9 @@ const MatrixContainer = () => {
 
   useEffect(() => {
     lifeCycle(currentMatrix, lifeCycleState, 1000 / speed, setMatrix)
+    if (lifeCycleState === `stoped`) i = 0
+    if (lifeCycleState === `started`) i++
+
     window.currentMatrix = currentMatrix
   }, [
     currentMatrix,
@@ -105,6 +109,7 @@ const MatrixContainer = () => {
             : <BsStopBtn />}
         </Btn>
         <Btn onClick={resetGame}> Reset </Btn>
+        <div>{i}</div>
       </ActionsContainer>
     </>
   )

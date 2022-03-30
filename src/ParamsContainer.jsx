@@ -1,7 +1,7 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import styled from 'styled-components'
-import { paramsContext, templateContext } from './context'
-import { Btn } from './globalStyles'
+import { paramsContext, templateContext, lifeCycleContext } from './context'
+// import { Btn } from './globalStyles'
 
 const ParamsWrapper = styled.div`
   position: absolute;
@@ -15,33 +15,35 @@ const ParamsInput = styled.input``
 const ParamsContainer = () => {
   const { params, setParams } = useContext(paramsContext)
   const { setTemplate } = useContext(templateContext)
-  const [newParams, setNewParams] = useState({ ...params })
-  const { speed } = newParams
+  const { lifeCycleState, setLifeCycleState } = useContext(lifeCycleContext)
+  const { speed, squareSize } = params
 
-  const updateParams = (key, type = `string`) => ({ target: { value } }) => {
-    const modifiedParams = { ...newParams }
+  const updateParams = (key, type = `string`, resetMatrix = false) => ({ target: { value } }) => {
+    const modifiedParams = { ...params }
     modifiedParams[key] = type === `number` ? Number.parseInt(value, 10) : value
-    setNewParams(modifiedParams)
+    setParams(modifiedParams)
+    if (resetMatrix) {
+      setTemplate([])
+      setLifeCycleState(`stoped`)
+    }
   }
 
-  const applyParams = () => {
-    setTemplate([])
-    setParams(newParams)
-  }
+  // const applyParams = () => setParams(newParams)
 
   return (
     <ParamsWrapper>
-      {/* <div>
+      <div>
         <div>squareSize</div>
         <ParamsInput
           type="range"
-          onChange={updateParams(`squareSize`, `number`)}
-          value={newParams?.squareSize}
+          onChange={updateParams(`squareSize`, `number`, true)}
+          value={squareSize}
           min="20"
           max="30"
+          disabled={lifeCycleState === `start`}
         />
-        <ParamsInput disabled value={newParams?.squareSize} />
-      </div> */}
+        <ParamsInput disabled value={squareSize} />
+      </div>
       <div>
         <div>speed</div>
         <ParamsInput
@@ -53,7 +55,6 @@ const ParamsContainer = () => {
         />
         <ParamsInput disabled value={`${speed}%`} />
       </div>
-      <Btn onClick={applyParams}>Save</Btn>
     </ParamsWrapper>
   )
 }

@@ -14,7 +14,7 @@ const App = () => {
   const [currentMatrix, setMatrix] = useState([])
   const matrixMemo = useMemo(() => ({ currentMatrix, setMatrix }), [currentMatrix])
 
-  const [lifeCycleState, setLifeCycleState] = useState(`stoped`)
+  const [lifeCycleState, setLifeCycleState] = useState({ currentState: `stoped`, i: 0 })
   const lifeCycleMemo = useMemo(() => ({ lifeCycleState, setLifeCycleState }), [lifeCycleState])
   const defaulfParams = {
     squareSize: 30,

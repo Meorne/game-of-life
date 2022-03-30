@@ -11,13 +11,14 @@ html, body, #root {
   overflow: hidden ;
   font-family: Arial, Helvetica, sans-serif;
 }
+
 `
-export const Line = styled.div`
+export const Line = styled.div.attrs({ className: `Line` })`
   display: flex;
+  flex-direction:row ;
 `
 
-export const Square = styled.div`
-  display: inline-flex;
+export const Square = styled.div.attrs({ className: `Square` })`
   width: ${({ squareSize }) => squareSize}px;
   height: ${({ squareSize }) => squareSize}px;
   border: ${({ borderSize }) => borderSize}px solid #000;
@@ -34,7 +35,7 @@ export const Square = styled.div`
   }
 `
 
-export const Btn = styled.div`
+export const Btn = styled.div.attrs({ className: `Btn` })`
   display: inline-block;
   padding: 5px;
   border: 1px solid #999;
